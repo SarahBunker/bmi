@@ -1,5 +1,6 @@
 import express from 'express';
 import { calculateBmi, parseArguments } from "./calculateBmi";
+import { calculator } from './calculator';
 const app = express();
 
 app.get('/ping', (_req, res) => {
@@ -30,6 +31,14 @@ app.get('/bmi', (req, res) => {
     }
     console.log(errorMessage);
   }
+}
+
+app.post('/calculate', (req, res) => {
+  const { value1, value2, op } = req.body;
+
+  const result = calculator(value1, value2, op);
+  res.send(result);
+});
 
   res.send({
     weight: height,
