@@ -1,11 +1,11 @@
 import express from 'express';
 import { calculateBmi, parseArguments } from "./calculateBmi";
 import { exerciseCalculator, checkExerciseArguments} from './exerciseCalculator';
-const bp = require('body-parser')
+const bp = require('body-parser');
 const app = express();
 
-app.use(bp.json())
-app.use(bp.urlencoded({ extended: true }))
+app.use(bp.json());
+app.use(bp.urlencoded({ extended: true }));
 
 // app.use((err, req, res, next) => {
 //   console.error(err.stack)
@@ -21,20 +21,20 @@ app.get('/hello', (_req, res) => {
 });
 
 app.get('/bmi', (req, res) => {
-  let queryString = req.query;
-  let strings = Object.values(queryString);
+  const queryString = req.query;
+  const strings = Object.values(queryString);
 
-  let bmi = ""
+  let bmi = "";
   let height = 0;
   let weight = 0;
 
   try {
-    let obj = parseArguments(strings as Array<string>);
-    height = obj["height"]
-    weight = obj["weight"]
-    bmi = (calculateBmi(height, weight))
+    const obj = parseArguments(strings as Array<string>);
+    height = obj["height"];
+    weight = obj["weight"];
+    bmi = (calculateBmi(height, weight));
   } catch (error: unknown) {
-    let errorMessage = 'malformatted parameters'
+    let errorMessage = 'malformatted parameters';
     if (error instanceof Error) {
       errorMessage += ' Error: ' + error.message;
     }
@@ -50,13 +50,13 @@ app.get('/bmi', (req, res) => {
 
 app.post('/exercises', (req, res) => {
   const { daily_exercises, target } = req.body;
-  console.log(daily_exercises, target)
+  console.log(daily_exercises, target);
   // console.log(req)
   // parseExerciseArguments([]);
   let result;
   try {
     checkExerciseArguments(daily_exercises, target);
-    result = exerciseCalculator(daily_exercises, target)
+    result = exerciseCalculator(daily_exercises, target);
 
   } catch (error: unknown) {
     let errorMessage = 'Something went wrong.';
@@ -65,7 +65,7 @@ app.post('/exercises', (req, res) => {
     }
     console.log(errorMessage);
     res.status(400);
-    res.send(errorMessage)
+    res.send(errorMessage);
   }
 
     // throw new Error('BROKEN')
