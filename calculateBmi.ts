@@ -18,8 +18,9 @@ interface MultipleValues {
   weight: number;
 }
 
-const parseArguments = (args: Array<string>) => {
-  args = args.slice(2)
+const parseArguments = (args: Array<string>) : MultipleValues => {
+  // console.log("args", args)
+  // args = args.slice(2)
   if (args.length < 2) throw new Error('Not enough arguments');
   if (args.length > 2) throw new Error('Too many arguments');
 
@@ -27,7 +28,6 @@ const parseArguments = (args: Array<string>) => {
     if (isNaN(Number(arg))) throw new Error('Provided values were not numbers!');
   });
   let argsNumber = args.map( (arg: string) => Number(arg));
-  console.log(argsNumber);
 
   return {
     height: argsNumber[0],
@@ -35,13 +35,15 @@ const parseArguments = (args: Array<string>) => {
   }
 }
 
-try {
-  const { height, weight } = parseArguments(process.argv);
-  console.log(calculateBmi(height, weight))
-} catch (error: unknown) {
-  let errorMessage = 'Something bad happened.'
-  if (error instanceof Error) {
-    errorMessage += ' Error: ' + error.message;
-  }
-  console.log(errorMessage);
-}
+// try {
+//   const { height, weight } = parseArguments(process.argv.slice(2));
+//   console.log(calculateBmi(height, weight))
+// } catch (error: unknown) {
+//   let errorMessage = 'Something bad happened.'
+//   if (error instanceof Error) {
+//     errorMessage += ' Error: ' + error.message;
+//   }
+//   console.log(errorMessage);
+// }
+
+export { calculateBmi, parseArguments };
