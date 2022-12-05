@@ -47,7 +47,7 @@ interface MultipleValues {
   target: number;
 }
 
-const parseArguments = (args: Array<string>) => {
+const parseExerciseArguments = (args: Array<string>): MultipleValues => {
   args = args.slice(2)
   if (args.length < 2) throw new Error('Not enough arguments');
   // if (args.length > 8) throw new Error('Too many arguments');
@@ -64,13 +64,28 @@ const parseArguments = (args: Array<string>) => {
   }
 }
 
-try {
-  const { target, array } = parseArguments(process.argv);
-  console.log(exerciseCalculator(array, target))
-} catch (error: unknown) {
-  let errorMessage = 'Something bad happened.'
-  if (error instanceof Error) {
-    errorMessage += ' Error: ' + error.message;
+const checkExerciseArguments = (daily_exercises: Array<number>, target: number) => {
+  if(!daily_exercises || !target) {
+    throw new Error('Not enough arguments');
   }
-  console.log(errorMessage);
+
+  daily_exercises.forEach((arg: number) => {
+    if (isNaN(Number(arg))) throw new Error('Provided values were not numbers!');
+  });
+
+  if (isNaN(Number(target))) throw new Error('Provided values were not numbers!');
 }
+
+
+// try {
+//   const { target, array } = parseExerciseArguments(process.argv);
+//   console.log(exerciseCalculator(array, target))
+// } catch (error: unknown) {
+//   let errorMessage = 'Something bad happened.'
+//   if (error instanceof Error) {
+//     errorMessage += ' Error: ' + error.message;
+//   }
+//   console.log(errorMessage);
+// }
+
+export {parseExerciseArguments, checkExerciseArguments, exerciseCalculator};

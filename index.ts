@@ -1,7 +1,16 @@
 import express from 'express';
 import { calculateBmi, parseArguments } from "./calculateBmi";
-import { calculator } from './calculator';
+import { exerciseCalculator, checkExerciseArguments} from './exerciseCalculator';
+const bp = require('body-parser')
 const app = express();
+
+app.use(bp.json())
+app.use(bp.urlencoded({ extended: true }))
+
+// app.use((err, req, res, next) => {
+//   console.error(err.stack)
+//   res.status(500).send('Something broke!')
+// })
 
 app.get('/ping', (_req, res) => {
   res.send('pong');
@@ -31,14 +40,6 @@ app.get('/bmi', (req, res) => {
     }
     console.log(errorMessage);
   }
-}
-
-app.post('/calculate', (req, res) => {
-  const { value1, value2, op } = req.body;
-
-  const result = calculator(value1, value2, op);
-  res.send(result);
-});
 
   res.send({
     weight: height,
@@ -46,6 +47,39 @@ app.post('/calculate', (req, res) => {
     bmi: bmi
   });
 });
+
+app.post('/exercises', (req, res) => {
+  const { daily_exercises, target } = req.body;
+  console.log(daily_exercises, target)
+  // console.log(req)
+  // parseExerciseArguments([]);
+  let result;
+  try {
+    checkExerciseArguments(daily_exercises, target);
+    result = exerciseCalculator(daily_exercises, target)
+
+  } catch (error: unknown) {
+    let errorMessage = 'Something went wrong.';
+    if (error instanceof Error) {
+      errorMessage += ' Error: ' + error.message;
+    }
+    console.log(errorMessage);
+    res.status(400);
+    res.send(errorMessage)
+  }
+
+    // throw new Error('BROKEN')
+    // res.statusCode(500)
+    // res.statusMessage(errorMessage)
+
+
+
+
+  // const result = calculator(value1, value2, op);
+  // res.send(result);
+  res.send(result);
+});
+
 
 const PORT = 3002;
 
